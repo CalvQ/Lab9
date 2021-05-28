@@ -1,72 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lab 9</title>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Lab 9</title>
 
-  <style>
-    button {
-      margin: 3px;
-    }
+        <style>
+            button {
+                margin: 3px;
+            }
 
-    input[type="number"] {
-      width: 60px;
-    }
+            input[type="number"] {
+                width: 60px;
+            }
 
-    output {
-      border: 1px solid gray;
-      display: block;
-      height: 18px;
-      margin-top: 5px;
-      padding: 5px;
-      width: 240px;
-    }
-  </style>
-</head>
-<body>
-  <fieldset>
-    <legend>Error Calculator</legend>
-    <input type="number" name="first-num" id="first-num" />
-    <select name="operator" id="operator">
-      <option>+</option>
-      <option>-</option>
-      <option>*</option>
-      <option>/</option>
-    </select>
-    <input type="number" name="second-num" id="second-num" />
-    <button id="calculate">Calculate</button>
-    <br />
-    <output></output>
-  </fieldset>
+            output {
+                border: 1px solid gray;
+                display: block;
+                height: 18px;
+                margin-top: 5px;
+                padding: 5px;
+                width: 240px;
+            }
+        </style>
+    </head>
+    <body>
+        <fieldset>
+            <legend>Error Calculator</legend>
+            <input type="number" name="first-num" id="first-num" />
+            <select name="operator" id="operator">
+                <option>+</option>
+                <option>-</option>
+                <option>*</option>
+                <option>/</option>
+            </select>
+            <input type="number" name="second-num" id="second-num" />
+            <button id="calculate">Calculate</button>
+            <br />
+            <output></output>
+        </fieldset>
 
-  <section id="error-btns">
-    <button>Console Log Demo</button>
-    <button>Console Error Demo</button>
-    <button>Console Dir</button>
-    <button>Console dirxml</button>
-    <button>Console Group Start</button>
-    <button>Console Group End</button>
-    <button>Console Table</button>
-    <button>Start Timer</button>
-    <button>End Timer</button>
-    <button>Console Trace</button>
-    <button>Trigger a Global Error</button>
-  </section>
+        <section id="error-btns">
+            <button>Console Log Demo</button>
+            <button>Console Error Demo</button>
+            <button>Console Dir</button>
+            <button>Console dirxml</button>
+            <button>Console Group Start</button>
+            <button>Console Group End</button>
+            <button>Console Table</button>
+            <button>Start Timer</button>
+            <button>End Timer</button>
+            <button>Console Trace</button>
+            <button>Trigger a Global Error</button>
+        </section>
 
-  <script>
-    let calculateBtn = document.querySelector('#calculate');
-    calculateBtn.addEventListener('click', () => {
-      let output = document.querySelector('output');
-      let firstNum = document.querySelector('#first-num').value;
-      let secondNum = document.querySelector('#second-num').value;
-      let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
-    });
+        <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+        <script>
+            window.TrackJS &&
+                TrackJS.install({
+                    token: "b5ed0f24b02f439685d6121c22e1209b",
+                    // for more configuration options, see https://docs.trackjs.com
+                });
+        </script>
 
-    let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
-    // TODO - Make buttons functional
-  </script>
-</body>
+        <script>
+            let calculateBtn = document.querySelector("#calculate");
+            calculateBtn.addEventListener("click", () => {
+                let output = document.querySelector("output");
+                let firstNum = document.querySelector("#first-num").value;
+                let secondNum = document.querySelector("#second-num").value;
+                let operator = document.querySelector("#operator").value;
+                output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+            });
+
+            const label = "Random group text testing";
+
+            let errorBtns = Array.from(
+                document.querySelectorAll("#error-btns > button")
+            );
+            // TODO - Make buttons functional
+            errorBtns[0].onclick = function () {
+                console.log("banana");
+            };
+            errorBtns[1].onclick = function () {
+                console.error("coconut");
+            };
+            errorBtns[2].onclick = function () {
+                console.dir(document.head);
+            };
+            errorBtns[3].onclick = function () {
+                console.dir(document);
+            };
+            errorBtns[4].onclick = function () {
+                console.group(label);
+            };
+            errorBtns[5].onclick = function () {
+                console.groupEnd(label);
+            };
+            errorBtns[6].onclick = function () {
+                console.table([
+                    {
+                        first: "René",
+                        last: "Magritte",
+                    },
+                    {
+                        first: "Chaim",
+                        last: "Soutine",
+                        birthday: "18930113",
+                    },
+                    {
+                        first: "Henri",
+                        last: "Matisse",
+                    },
+                ]);
+            };
+            errorBtns[7].onclick = function () {
+                console.time();
+            };
+            errorBtns[8].onclick = function () {
+                console.timeEnd();
+            };
+            errorBtns[9].onclick = function () {
+                const tracer = () => {
+                    console.trace();
+                };
+                tracer();
+            };
+
+            class CustomError extends Error {
+                constructor(message) {
+                    super(message);
+                    this.name = "GlobalError";
+                }
+            }
+
+            function throwCustomError() {
+                throw new CustomError("Big Sad Global Error Happened");
+            }
+
+            errorBtns[10].onclick = function () {
+                try {
+                    garbo();
+                } catch (err) {
+                    throwCustomError();
+                } finally {
+                    console.log("Ooga, this always runs");
+                }
+            };
+        </script>
+    </body>
 </html>
